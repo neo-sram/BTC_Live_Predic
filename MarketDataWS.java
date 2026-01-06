@@ -7,6 +7,7 @@ import java.util.logging.*;
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
+import java.nio.file.*;
 
 public class MarketDataWS {
     //initializing logger and writer
@@ -22,7 +23,14 @@ public class MarketDataWS {
                     public void onOpen(WebSocket ws) {
                         System.out.println("Connected");
                         try {
-                            writer = new PrintWriter(new FileWriter("market_data.log", true));
+                            Files.createDirectories(Paths.get("logs"));
+                            int i = 1;
+                            String filename;
+                            do {
+                                filename = "logs/market_data_" + (i == 1 ? "1" : i) + ".log";
+                                i++;
+                            } while (Files.exists(Paths.get(filename)));
+                            writer = new PrintWriter(new FileWriter(filename, false));
                         } catch (IOException e) {
                             logger.log(Level.SEVERE, "Error opening log file", e);
                         }
