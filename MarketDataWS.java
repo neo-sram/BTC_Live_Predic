@@ -24,13 +24,14 @@ public class MarketDataWS {
                         System.out.println("Connected");
                         try {
                             Files.createDirectories(Paths.get("logs"));
-                            int i = 1;
+                            int i = 0;
                             String filename;
                             do {
-                                filename = "logs/market_data_" + (i == 1 ? "1" : i) + ".log";
+                                filename = "logs/market_data" + (i == 0 ? "" : i) + ".csv";
                                 i++;
                             } while (Files.exists(Paths.get(filename)));
                             writer = new PrintWriter(new FileWriter(filename, false));
+                            writer.println("Open,High,Low,Close,Trades");
                         } catch (IOException e) {
                             logger.log(Level.SEVERE, "Error opening log file", e);
                         }
@@ -57,7 +58,7 @@ public class MarketDataWS {
                         String c = fields.get("c");
                         String n = fields.get("n");
                         if (o != null && h != null && l != null && c != null && n != null) {
-                            writer.println("Open: " + o + ", High: " + h + ", Low: " + l + ", Close: " + c + ", Volume: " + n);
+                            writer.println(o + "," + h + "," + l + "," + c + "," + n);
                             writer.flush();
                         }
                         ws.request(1);
