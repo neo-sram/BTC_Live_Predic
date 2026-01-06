@@ -1,3 +1,4 @@
+//Imports
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.WebSocket;
@@ -8,12 +9,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MarketDataWS {
-
+    //initializing logger and writer
     private static final Logger logger = Logger.getLogger(MarketDataWS.class.getName());
     private static PrintWriter writer;
     public static void main(String[] args) {
+        //Creating WebSocket client
         HttpClient client = HttpClient.newHttpClient();
         client.newWebSocketBuilder().buildAsync(URI.create("wss://stream.binance.com:9443/ws/btcusdt@ticker_1h"),
+        //Creating WebSocket listener
                 new WebSocket.Listener() {
                     @Override
                     public void onOpen(WebSocket ws) {
@@ -25,6 +28,7 @@ public class MarketDataWS {
                         }
                         ws.request(1);
                     }
+                    //Handling incoming text messages
                     @Override
                     public CompletionStage<?> onText(WebSocket ws, CharSequence data, boolean last) {
                         String json = data.toString();
@@ -38,6 +42,7 @@ public class MarketDataWS {
                                 fields.put(key, value);
                             }
                         }
+                        //Extracting required fields
                         String o = fields.get("o");
                         String h = fields.get("h");
                         String l = fields.get("l");
@@ -50,6 +55,7 @@ public class MarketDataWS {
                         ws.request(1);
                         return null;
                     }
+                    //Handling errors
                     @Override
                     public CompletionStage<?> onClose(WebSocket ws, int code, String reason) {
                         if (writer != null) {
@@ -62,4 +68,3 @@ public class MarketDataWS {
     }
 }
 
-// TODO : filter for only o,l,c,h,n values and log them
