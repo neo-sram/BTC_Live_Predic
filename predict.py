@@ -5,7 +5,7 @@ from sklearn.preprocessing import MinMaxScaler
 
 # Load and fit the scaler on training data
 sc = MinMaxScaler(feature_range=(0,1))
-df_train = pd.read_csv('logs/market_data4.csv', parse_dates=['Time'], index_col='Time')
+df_train = pd.read_csv('data/market_data.csv', parse_dates=['Time'], index_col='Time')
 train_set = df_train[:'2026'].iloc[:,1:2].values 
 sc.fit(train_set)
 

@@ -27,11 +27,11 @@ public class MarketDataWS {
                         System.out.println("Connected");
                         //handeling logging and csv files creation
                         try {
-                            Files.createDirectories(Paths.get("logs"));
+                            Files.createDirectories(Paths.get("data"));
                             int i = 0;
                             String filename;
                             do {
-                                filename = "logs/market_data" + (i == 0 ? "" : i) + ".csv";
+                                filename = "data/market_data" + (i == 0 ? "" : i) + ".csv";
                                 i++;
                             } while (Files.exists(Paths.get(filename)));
                             writer = new PrintWriter(new FileWriter(filename, false));
