@@ -8,6 +8,9 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.nio.file.*;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 public class MarketDataWS {
     //initializing logger and writer
@@ -22,6 +25,7 @@ public class MarketDataWS {
                     @Override
                     public void onOpen(WebSocket ws) {
                         System.out.println("Connected");
+                        //handeling logging and csv files creation
                         try {
                             Files.createDirectories(Paths.get("logs"));
                             int i = 0;
@@ -31,7 +35,7 @@ public class MarketDataWS {
                                 i++;
                             } while (Files.exists(Paths.get(filename)));
                             writer = new PrintWriter(new FileWriter(filename, false));
-                            writer.println("Open,High,Low,Close,Trades");
+                            writer.println("Time,Open,High,Low,Close,Volume");
                         } catch (IOException e) {
                             logger.log(Level.SEVERE, "Error opening log file", e);
                         }
@@ -52,13 +56,17 @@ public class MarketDataWS {
                             }
                         }
                         //Extracting required fields
+                        String e = fields.get("E");
                         String o = fields.get("o");
                         String h = fields.get("h");
                         String l = fields.get("l");
                         String c = fields.get("c");
                         String n = fields.get("n");
-                        if (o != null && h != null && l != null && c != null && n != null) {
-                            writer.println(o + "," + h + "," + l + "," + c + "," + n);
+                        if (e != null && o != null && h != null && l != null && c != null && n != null) {
+                            long timestamp = Long.parseLong(e);
+                            Instant instant = Instant.ofEpochMilli(timestamp);
+                            String formattedTime = instant.atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                            writer.println(formattedTime + "," + o + "," + h + "," + l + "," + c + "," + n);
                             writer.flush();
                         }
                         ws.request(1);
@@ -73,6 +81,7 @@ public class MarketDataWS {
                         return null;
                     }
                 });
+        //error handeling for ws connection
         try { Thread.sleep(Long.MAX_VALUE); } catch (Exception e) {}
     }
 }
