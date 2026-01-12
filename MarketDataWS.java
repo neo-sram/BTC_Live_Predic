@@ -19,7 +19,7 @@ public class MarketDataWS {
     public static void main(String[] args) {
         //Creating WebSocket client
         HttpClient client = HttpClient.newHttpClient();
-        client.newWebSocketBuilder().buildAsync(URI.create("wss://stream.binance.com:9443/ws/btcusdt@ticker_1h"),
+        client.newWebSocketBuilder().buildAsync(URI.create("wss://stream.binance.com:9443/ws/btcusdt@ticker"),
         //Creating WebSocket listener
                 new WebSocket.Listener() {
                     @Override
@@ -66,7 +66,7 @@ public class MarketDataWS {
                             long timestamp = Long.parseLong(e);
                             Instant instant = Instant.ofEpochMilli(timestamp);
                             String formattedTime = instant.atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-                            writer.println(formattedTime + "," + o + "," + h + "," + l + "," + c + "," + n);
+                            writer.println(/*formattedTime + "," +*/ o + "," + h + "," + l + "," + c + "," + n);
                             writer.flush();
                         }
                         ws.request(1);
