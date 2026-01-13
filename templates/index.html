@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>BTC Price Predictions</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+  <div class="card">
+    <h1>BTC Price Predictions</h1>
+    <div class="muted">Select a prediction horizon to view the next few hours.</div>
+    <div class="controls">
+      <button id="btn12">12 Hours</button>
+      <button id="btn24" class="secondary">24 Hours</button>
+      <button id="btn48" class="secondary">48 Hours</button>
+    </div>
+
+    <div id="summary" class="muted"></div>
+
+    <table id="predTable">
+      <thead>
+        <tr><th>Hour</th><th>High</th><th>Low</th><th>Close</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <script>const PREDS = {{ preds_list|tojson }};</script>
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
